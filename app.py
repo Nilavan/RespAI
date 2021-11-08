@@ -37,7 +37,6 @@ def index():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    print('HERE')
     message = request.get_json(force=True)
     encoded = message['image']
     decoded = base64.b64decode(encoded)
@@ -49,7 +48,6 @@ def predict():
     result = np.argmax(prediction, axis=1)[0]
     accuracy = float(np.max(prediction, axis=1)[0])
     label = label_dict[result]
-    print(prediction, result, accuracy)
     response = {'prediction': {'result': label, 'accuracy': accuracy}}
     return jsonify(response)
 
