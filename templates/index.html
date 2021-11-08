@@ -1,9 +1,13 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>COVID-19 TESTING</title>
   </head>
   <body>
-    <h1>COVID-19 TESTING USING X-RAY IMAGES</h1>
+    <h1>COVID-19 TESTING USING CXR IMAGES</h1>
     <input id="image-selector" type="file" />
     <button id="predict-button">Predict</button>
     <p>PREDICTION: <span id="result">...</span></p>
@@ -35,15 +39,11 @@
       };
 
       console.log(message);
-      $.post(
-        "http://127.0.0.1:5000/predict",
-        JSON.stringify(message),
-        function (response) {
-          $("#result").text(response.prediction.result);
-          $("#probability").text(response.prediction.accuracy.toFixed(2));
-          console.log(response);
-        }
-      );
+      $.post("/predict", JSON.stringify(message), function (response) {
+        $("#result").text(response.prediction.result);
+        $("#probability").text(response.prediction.accuracy.toFixed(2));
+        console.log(response);
+      });
     });
   </script>
 </html>
