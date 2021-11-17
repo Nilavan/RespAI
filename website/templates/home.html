@@ -1,0 +1,113 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<head>
+  <style>
+    .item1 {
+      grid-area: header;
+    }
+    .item2 {
+      grid-area: main;
+    }
+    .item3 {
+      grid-area: right;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-areas:
+        "header header header header"
+        "main main right right"
+        "footer footer footer footer";
+      grid-gap: 2%;
+      padding: 2%;
+    }
+
+    .grid-container > div {
+      text-align: center;
+      padding: 2%;
+      font-size: large;
+    }
+
+    .results {
+      background-color: aquamarine;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <div class="item1"><h1 align="center">COVID-19/PNEUMONIA TESTING</h1></div>
+    <div class="item2">
+      <form method="post" enctype="multipart/form-data">
+        <div class="row">
+          <label class="col" for="name" align="left"
+            >Patient Name: &nbsp;</label
+          >
+          <input
+            class="col"
+            type="text"
+            name="name"
+            id="name"
+            placeholder="{{ patient }}"
+          /><br />
+        </div>
+        <br />
+        <div class="row">
+          <label class="col" for="phone" align="left"
+            >Patient's phone number: &nbsp;</label
+          >
+          <input
+            class="col"
+            type="tel"
+            name="phone"
+            id="phone"
+            placeholder="{{ phone }}"
+          /><br />
+        </div>
+        <br />
+        <input
+          class="m-7 btn btn-outline-info"
+          id="image-selector"
+          type="file"
+          name="file"
+          placeholder="{{ url_for('views.display_image', filename=filename) }}"
+        /><br />
+        <div class="row m-7">
+          <button id="predict-button" class="col m-3 btn btn-outline-primary">
+            Predict
+          </button>
+          <button
+            id="verify-button"
+            class="col m-3 btn btn-outline-success"
+            onclick="verify()"
+          >
+            Verify
+          </button>
+        </div>
+      </form>
+      <div class="col p-5 results">
+        <p class="row">
+          Prediction:&nbsp;<span id="result">{{ result }}</span>
+        </p>
+        <p class="row">
+          Probability:&nbsp;<span id="probability">{{ accuracy }}</span>
+        </p>
+      </div>
+    </div>
+    <div class="item3">
+      <img
+        align="right"
+        id="selected-image"
+        width="350"
+        src="{{ url_for('views.display_image', filename=filename) }}"
+        alt="Selected Image"
+        onerror='this.style.display = "none"'
+      /><br />
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='calc.js') }}"
+    ></script>
+  </div>
+</body>
+{% endblock %}
