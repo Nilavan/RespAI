@@ -7,3 +7,9 @@ numpy>=1.18.1
 Pillow>=7.0.0
 Flask-SQLAlchemy
 flask-login
+Keras
+Keras-Applications
+Keras-Preprocessing
+tensorflow
+tensorflow-estimator
+urllib

@@ -93,7 +93,7 @@
           Prediction:&nbsp;<span id="result">{{ result }}</span>
         </p>
         <p class="row">
-          Probability:&nbsp;<span id="probability">{{ accuracy }}</span>
+          Probability:&nbsp;<span id="probability">{{ accuracy }}%</span>
         </p>
       </div>
     </div>
@@ -107,7 +107,6 @@
         onerror="this.style.display = 'none'"
       />
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
       var loadFile = function (event) {
         var image = document.getElementById("selected-image");
