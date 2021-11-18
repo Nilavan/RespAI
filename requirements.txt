@@ -1,6 +1,6 @@
 Flask==2.0.1
 gunicorn
-itsdangerous==1.1.0
+itsdangerous
 Jinja2==3.0.1
 opencv-python==4.5.3.56
 numpy>=1.18.1
