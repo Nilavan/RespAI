@@ -2,7 +2,7 @@ Flask
 gunicorn
 itsdangerous
 Jinja2==3.0.1
-opencv-python
+opencv-python-headless
 numpy>=1.18.1
 Pillow>=7.0.0
 Flask-SQLAlchemy
