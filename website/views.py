@@ -48,11 +48,6 @@ def preprocess(img):
 @login_required
 def home():
     if request.method == 'POST':
-        #message = request.get_json(force=True)
-        #encoded = message['image']
-        #decoded = base64.b64decode(encoded)
-        #dataBytesIO = io.BytesIO(decoded)
-        # dataBytesIO.seek(0)
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -91,5 +86,4 @@ def home():
 
 @views.route('/display/<filename>')
 def display_image(filename):
-        #print('display_image filename: ' + filename)
     return redirect(url_for('static', filename='uploads/' + filename), code=301)
