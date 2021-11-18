@@ -18,6 +18,12 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+model_url = 'https://github.com/Nilavan/RespAI/releases/download/model/model_weights.h5'
+model_filename = model_url.split('/')[-1]
+print("Downloading model...")
+urllib.request.urlretrieve(model_url, model_filename)
+print("Model downloaded!")
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -40,14 +46,6 @@ def home():
             flash("Enter name and phone number", category="error")
             return redirect(request.url)
         elif file and allowed_file(file.filename) and name != '' and phone != '':
-            model_url = 'https://github.com/Nilavan/RespAI/releases/download/model/model_weights.h5'
-            model_filename = model_url.split('/')[-1]
-            if not os.path.exists('./model_weights.h5'):
-                flash('Downloading model... This may take some time.',
-                      category="warning")
-                urllib.request.urlretrieve(model_url, model_filename)
-                flash("Model downloaded!", category='success')
-
             json_file = open('model.json', 'r')
             loaded_model_json = json_file.read()
             json_file.close()
