@@ -1,10 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from flask_login import login_required, current_user
-from h5py._hl import base
 from werkzeug.utils import secure_filename
 from .models import Patient
 from . import db
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import model_from_json
 import cv2
 import numpy as np
 import os
@@ -18,12 +17,6 @@ views = Blueprint('views', __name__)
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
-'''if not os.path.exists('./model.py'):
-    id = '1E-eFqrPOeEisrlYqHCKdCZdRqzqlP85U'
-    gdd.download_file_from_google_drive(file_id=id, dest_path='./model.h5')
-
-model = load_model('model.h5')'''
 
 
 def allowed_file(filename):
@@ -45,16 +38,22 @@ def home():
             return redirect(request.url)
         elif name == '' or phone == '':
             flash("Enter name and phone number", category="error")
+            return redirect(request.url)
         elif file and allowed_file(file.filename) and name != '' and phone != '':
-            model_url = 'https://github.com/Nilavan/RespAI/releases/download/model/model.h5'
+            model_url = 'https://github.com/Nilavan/RespAI/releases/download/model/model_weights.h5'
             model_filename = model_url.split('/')[-1]
-            if not os.path.exists('./model.h5'):
+            if not os.path.exists('./model_weights.h5'):
                 flash('Downloading model... This may take some time.',
                       category="warning")
                 urllib.request.urlretrieve(model_url, model_filename)
                 flash("Model downloaded!", category='success')
 
-            model = load_model(model_filename)
+            json_file = open('model.json', 'r')
+            loaded_model_json = json_file.read()
+            json_file.close()
+            model = model_from_json(loaded_model_json)
+            model.load_weights(model_filename)
+
             filename = secure_filename(file.filename)
             file_stored = os.path.join(
                 basedir, current_app.config['UPLOAD_FOLDER'], filename)
@@ -65,7 +64,7 @@ def home():
             prediction = model.predict(np.expand_dims(test_image, axis=0))[0]
             result = np.argmax(prediction)
             label = label_dict[result]
-            accuracy = float(np.max(prediction)*100)
+            accuracy = float(np.max(prediction)*100.0)
             new_patient = Patient(name=name, phone=phone, result=label,
                                   probability=accuracy, user_id=current_user.id)
             db.session.add(new_patient)
