@@ -52,10 +52,14 @@ def home():
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
+        name = request.form.get('name')
+        phone = request.form.get('phone')
         if file.filename == '':
-            flash('No image selected for uploading', category='error')
+            flash('No image selected', category='error')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
+        elif name == '' or phone == '':
+            flash("Enter name and phone number", category="error")
+        elif file and allowed_file(file.filename) and name != '' and phone != '':
             filename = secure_filename(file.filename)
             file_stored = os.path.join(
                 basedir, current_app.config['UPLOAD_FOLDER'], filename)
@@ -66,9 +70,6 @@ def home():
             result = np.argmax(prediction, axis=1)[0]
             accuracy = float(np.max(prediction, axis=1)[0])
             label = label_dict[result]
-
-            name = request.form.get('name')
-            phone = request.form.get('phone')
             result = label
             probability = accuracy
             new_patient = Patient(name=name, phone=phone, result=result,
@@ -78,7 +79,7 @@ def home():
             flash('Patient added!', category='success')
             return render_template('home.html', patient=name, phone=phone, filename=filename, result=result, accuracy=accuracy, user=current_user)
         else:
-            flash('Allowed image types are -> png, jpg, jpeg, gif', category='error')
+            flash('Allowed image types are -> png, jpg, jpeg', category='error')
             return redirect(request.url)
 
     return render_template('home.html', user=current_user)

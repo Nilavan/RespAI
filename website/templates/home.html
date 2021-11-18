@@ -125,10 +125,7 @@
         let phone = phone1 + phone2;
         let prediction = document.getElementById("result").textContent;
         let probability = document.getElementById("probability").textContent;
-        if (name.length === 0 || phone.length === 0) {
-          let output = "Please enter name and phone number";
-          alert(output);
-        } else if (prediction.length === 0) {
+        if (prediction.length === 0) {
           let output = "Please get the prediction first";
           alert(output);
         } else {
