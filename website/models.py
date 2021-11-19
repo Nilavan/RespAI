@@ -5,11 +5,10 @@ from sqlalchemy.sql import func
 
 class Patient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(150), default='test')
-    phone = db.Column(db.String(10), default='test')
+    name = db.Column(db.String(150))
+    phone = db.Column(db.String(10))
     result = db.Column(db.String)
     probability = db.Column(db.Float)
-    #verify = db.Column(db.Bool)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
