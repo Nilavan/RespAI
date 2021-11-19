@@ -55,15 +55,15 @@
         </div>
         <br />
         <div class="row">
-          <label class="col" for="phone" align="left"
-            >Patient's phone number: &nbsp;</label
+          <label class="col" for="email" align="left"
+            >Patient's email: &nbsp;</label
           >
           <input
             class="col"
-            type="tel"
-            name="phone"
-            id="phone"
-            placeholder="{{ phone }}"
+            type="email"
+            name="email"
+            id="email"
+            placeholder="{{ email }}"
           /><br />
         </div>
         <br />
@@ -75,18 +75,64 @@
           onchange="loadFile(event)"
         /><br />
         <div class="row m-7">
-          <button id="predict-button" class="col m-3 btn btn-outline-primary">
-            Predict
-          </button>
+          <input
+            type="submit"
+            id="predict-button"
+            name="button-name"
+            class="col m-3 btn btn-outline-primary"
+            value="Predict"
+          />
           {% if result %}
-          <button
+          <input
+            type="button"
             id="verify-button"
+            name="button-name"
             class="col m-3 btn btn-outline-success"
             onclick="verify()"
-            formmethod="get"
-          >
-            Verify
-          </button>
+            value="Verify"
+          />
+          <script src="https://smtpjs.com/v3/smtp.js"></script>
+          <script>
+            function verify() {
+              let email = document
+                .getElementById("email")
+                .getAttribute("placeholder");
+              let name = document
+                .getElementById("name")
+                .getAttribute("placeholder");
+              let prediction = document.getElementById("result").textContent;
+              let probability =
+                document.getElementById("probability").textContent;
+              let output =
+                "Email sent to " +
+                name +
+                " - " +
+                email +
+                "\nCOVID19/Pneumonia Result: " +
+                probability +
+                " chance of " +
+                prediction;
+              document.getElementById("name").placeholder = "";
+              document.getElementById("email").placeholder = "";
+              Email.send({
+                SecureToken: "d366a9b0-530b-4c7b-9af1-da406ff51b40",
+                To: email,
+                From: "nilavan.respai@gmail.com",
+                Subject: "COVID19/Pneumonia Result",
+                Body:
+                  "Dear " +
+                  name +
+                  ",<br><br>Your COVID19/Pneumonia test results have been verified to be  " +
+                  prediction +
+                  " with a probability of " +
+                  probability +
+                  "<br><br>Regards,<br>Team RespAI",
+              }).then(function (message) {
+                alert(output);
+                location.replace(location.origin);
+              });
+            }
+          </script>
           {% endif %}
         </div>
       </form>
@@ -117,31 +163,6 @@
         var placeholder = document.getElementById("selected-image-placeholder");
         placeholder.src = "";
       };
-
-      function verify() {
-        let phone1 = document.getElementById("phone").value;
-        let name1 = document.getElementById("name").value;
-        let phone2 = document
-          .getElementById("phone")
-          .getAttribute("placeholder");
-        let name2 = document.getElementById("name").getAttribute("placeholder");
-        let name = name1 + name2;
-        let phone = phone1 + phone2;
-        let prediction = document.getElementById("result").textContent;
-        let probability = document.getElementById("probability").textContent;
-        let output =
-          "SMS sent to " +
-          name +
-          " - " +
-          phone +
-          "\nCOVID19/Pneumonia Result: " +
-          probability +
-          " chance of " +
-          prediction;
-        document.getElementById("name").placeholder = "";
-        document.getElementById("phone").placeholder = "";
-        alert(output);
-      }
     </script>
   </div>
 </body>

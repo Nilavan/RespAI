@@ -5,8 +5,8 @@ from sqlalchemy.sql import func
 
 class Patient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(150))
-    phone = db.Column(db.String(10))
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
     result = db.Column(db.String)
     probability = db.Column(db.Float)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

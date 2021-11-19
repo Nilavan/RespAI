@@ -20,9 +20,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 model_url = 'https://github.com/Nilavan/RespAI/releases/download/model/model_weights.h5'
 model_filename = model_url.split('/')[-1]
-print("Downloading model...")
-urllib.request.urlretrieve(model_url, model_filename)
-print("Model downloaded!")
+
+if not os.path.exists(model_filename):
+    print("Downloading model...")
+    urllib.request.urlretrieve(model_url, model_filename)
+    print("Model downloaded!")
 
 
 def allowed_file(filename):
@@ -38,20 +40,19 @@ def home():
             return redirect(request.url)
         file = request.files['file']
         name = request.form.get('name')
-        phone = request.form.get('phone')
+        email = request.form.get('email')
         if file.filename == '':
             flash('No image selected', category='error')
             return redirect(request.url)
-        elif name == '' or phone == '':
-            flash("Enter name and phone number", category="error")
+        elif (name == '' or email == ''):
+            flash("Enter name and email id", category="error")
             return redirect(request.url)
-        elif file and allowed_file(file.filename) and name != '' and phone != '':
+        elif file and allowed_file(file.filename) and name != '' and email != '':
             json_file = open('model.json', 'r')
             loaded_model_json = json_file.read()
             json_file.close()
             model = model_from_json(loaded_model_json)
             model.load_weights(model_filename)
-
             filename = secure_filename(file.filename)
             file_stored = os.path.join(
                 basedir, current_app.config['UPLOAD_FOLDER'], filename)
@@ -59,16 +60,18 @@ def home():
             test_image = cv2.imread(file_stored)
             test_image = cv2.resize(test_image, (300, 300))
             test_image = test_image.astype('float32') / 255.0
-            prediction = model.predict(np.expand_dims(test_image, axis=0))[0]
+            prediction = model.predict(
+                np.expand_dims(test_image, axis=0))[0]
             result = np.argmax(prediction)
             label = label_dict[result]
             accuracy = float(np.max(prediction)*100.0)
-            new_patient = Patient(name=name, phone=phone, result=label,
+            new_patient = Patient(name=name, email=email, result=label,
                                   probability=accuracy, user_id=current_user.id)
             db.session.add(new_patient)
             db.session.commit()
-            flash('Patient added to database!', category='success')
-            return render_template('home.html', patient=name, phone=phone, filename=filename, result=label, accuracy=accuracy, user=current_user)
+            flash('Patient added to database! Please verify the results',
+                  category='success')
+            return render_template('home.html', patient=name, email=email, filename=filename, result=label, accuracy=accuracy, user=current_user)
         else:
             flash('Allowed image types are -> png, jpg, jpeg', category='error')
             return redirect(request.url)
