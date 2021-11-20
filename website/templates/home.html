@@ -1,169 +1,134 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<head>
-  <style>
-    .item1 {
-      grid-area: header;
-    }
-    .item2 {
-      grid-area: main;
-    }
-    .item3 {
-      grid-area: right;
-    }
-
-    .grid-container {
-      display: grid;
-      grid-template-areas:
-        "header header header header"
-        "main main right right"
-        "footer footer footer footer";
-      grid-gap: 2%;
-      padding: 2%;
-    }
-
-    .grid-container > div {
-      text-align: center;
-      padding: 2%;
-      font-size: large;
-    }
-
-    .results {
-      background-color: aquamarine;
-    }
-    img {
-      text-indent: -10000px;
-    }
-  </style>
-</head>
-<body>
-  <div class="grid-container">
-    <div class="item1"><h1 align="center">COVID-19/PNEUMONIA TESTING</h1></div>
-    <div class="item2">
-      <form method="post" enctype="multipart/form-data">
-        <div class="row">
-          <label class="col" for="name" align="left"
-            >Patient Name: &nbsp;</label
-          >
-          <input
-            class="col"
-            type="text"
-            name="name"
-            id="name"
-            placeholder="{{ patient }}"
-          /><br />
-        </div>
-        <br />
-        <div class="row">
-          <label class="col" for="email" align="left"
-            >Patient's email: &nbsp;</label
-          >
-          <input
-            class="col"
-            type="email"
-            name="email"
-            id="email"
-            placeholder="{{ email }}"
-          /><br />
-        </div>
-        <br />
+<div class="col">
+  <br />
+  <h1 align="center">COVID-19/PNEUMONIA TESTING</h1>
+  <br />
+</div>
+<div class="row">
+  <div class="col-lg-6 col-md-5 col-sm-3 col-10 p-3">
+    <form method="post" enctype="multipart/form-data">
+      <div class="row">
+        <label class="col" for="name" align="left">Patient Name:</label>
         <input
-          class="m-7 btn btn-outline-info"
+          class="col"
+          type="text"
+          name="name"
+          id="name"
+          placeholder="{{ patient }}"
+        /><br />
+      </div>
+      <br />
+      <div class="row">
+        <label class="col" for="email" align="left">Patient's email:</label>
+        <input
+          class="col"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="{{ email }}"
+        />
+      </div>
+      <div class="col p-2 pt-4" align="center">
+        <input
+          class="btn btn-outline-info form-control-file w-100"
           id="image-selector"
           type="file"
           name="file"
           onchange="loadFile(event)"
-        /><br />
-        <div class="row m-7">
-          <input
-            type="submit"
-            id="predict-button"
-            name="button-name"
-            class="col m-3 btn btn-outline-primary"
-            value="Predict"
-          />
-          {% if result %}
-          <input
-            type="button"
-            id="verify-button"
-            name="button-name"
-            class="col m-3 btn btn-outline-success"
-            onclick="verify()"
-            value="Verify"
-          />
-          <script src="https://smtpjs.com/v3/smtp.js"></script>
-          <script>
-            function verify() {
-              let email = document
-                .getElementById("email")
-                .getAttribute("placeholder");
-              let name = document
-                .getElementById("name")
-                .getAttribute("placeholder");
-              let prediction = document.getElementById("result").textContent;
-              let probability =
-                document.getElementById("probability").textContent;
-              let output =
-                "Email sent to " +
-                name +
-                " - " +
-                email +
-                "\nCOVID19/Pneumonia Result: " +
-                probability +
-                " chance of " +
-                prediction;
-              document.getElementById("name").placeholder = "";
-              document.getElementById("email").placeholder = "";
-              Email.send({
-                SecureToken: "d366a9b0-530b-4c7b-9af1-da406ff51b40",
-                To: email,
-                From: "nilavan.respai@gmail.com",
-                Subject: "COVID19/Pneumonia Result",
-                Body:
-                  "Dear " +
-                  name +
-                  ",<br><br>Your COVID19/Pneumonia test results have been verified to be  " +
-                  prediction +
-                  " with a probability of " +
-                  probability +
-                  "<br><br>Regards,<br>Team RespAI",
-              }).then(function (message) {
-                alert(output);
-                location.replace(location.origin);
-              });
-            }
-          </script>
-          {% endif %}
-        </div>
-      </form>
-      <div class="col p-5 results">
-        <p class="row">
-          Prediction:&nbsp;<span id="result">{{ result }}</span>
-        </p>
-        <p class="row">
-          Probability:&nbsp;<span id="probability">{{ accuracy }}%</span>
-        </p>
+        />
       </div>
+      <div class="row m-7">
+        <input
+          type="submit"
+          id="predict-button"
+          name="button-name"
+          class="col m-3 btn btn-outline-primary"
+          value="Predict"
+        />
+        {% if result %}
+        <input
+          type="button"
+          id="verify-button"
+          name="button-name"
+          class="col m-3 btn btn-outline-success"
+          onclick="verify()"
+          value="Verify"
+        />
+        <script src="https://smtpjs.com/v3/smtp.js"></script>
+        <script>
+          function verify() {
+            let email = document
+              .getElementById("email")
+              .getAttribute("placeholder");
+            let name = document
+              .getElementById("name")
+              .getAttribute("placeholder");
+            let prediction = document.getElementById("result").textContent;
+            let probability =
+              document.getElementById("probability").textContent;
+            let output =
+              "Email sent to " +
+              name +
+              " - " +
+              email +
+              "\nCOVID19/Pneumonia Result: " +
+              probability +
+              " chance of " +
+              prediction;
+            document.getElementById("name").placeholder = "";
+            document.getElementById("email").placeholder = "";
+            Email.send({
+              SecureToken: "d366a9b0-530b-4c7b-9af1-da406ff51b40",
+              To: email,
+              From: "nilavan.respai@gmail.com",
+              Subject: "COVID19/Pneumonia Result",
+              Body:
+                "Dear " +
+                name +
+                ",<br><br>Your COVID19/Pneumonia test results have been verified to be  " +
+                prediction +
+                " with a probability of " +
+                probability +
+                "<br><br>Regards,<br>Team RespAI",
+            }).then(function (message) {
+              alert(output);
+              location.replace(location.origin);
+            });
+          }
+        </script>
+        {% endif %}
+      </div>
+    </form>
+    <div class="col p-5 results">
+      <p class="row">Prediction:&nbsp;<span id="result">{{ result }}</span></p>
+      <p class="row">
+        Probability:&nbsp;<span id="probability">{{ accuracy }}%</span>
+      </p>
     </div>
-    <div class="item3">
-      <h4>Selected Image</h4>
-      <br />
-      <img id="selected-image" width="350" />
+  </div>
+  <div class="col">
+    <br />
+    <h4 align="center">Selected Image</h4>
+    <div class="col p-3" align="center">
+      <img id="selected-image" class="img-fluid" />
       <img
+        class="img-fluid"
         src="{{ url_for('views.display_image', filename=filename) }}"
         id="selected-image-placeholder"
-        width="350"
         onerror="this.style.display = 'none'"
       />
+      <script>
+        var loadFile = function (event) {
+          var image = document.getElementById("selected-image");
+          image.src = URL.createObjectURL(event.target.files[0]);
+          var placeholder = document.getElementById(
+            "selected-image-placeholder"
+          );
+          placeholder.src = "";
+        };
+      </script>
     </div>
-    <script>
-      var loadFile = function (event) {
-        var image = document.getElementById("selected-image");
-        image.src = URL.createObjectURL(event.target.files[0]);
-        var placeholder = document.getElementById("selected-image-placeholder");
-        placeholder.src = "";
-      };
-    </script>
   </div>
-</body>
+</div>
 {% endblock %}
