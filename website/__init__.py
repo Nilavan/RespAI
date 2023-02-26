@@ -9,9 +9,10 @@ UPLOAD_FOLDER = 'static/uploads/'
 
 
 def create_app():
+    basedir = path.abspath(path.dirname(__file__))
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + path.join(basedir, DB_NAME)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     db.init_app(app)
 

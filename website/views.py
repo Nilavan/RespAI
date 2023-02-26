@@ -71,7 +71,7 @@ def home():
             db.session.commit()
             flash('Patient added to database! Please verify the results',
                   category='success')
-            return render_template('home.html', patient=name, email=email, filename=filename, result=label, accuracy=accuracy, user=current_user)
+            return render_template('home.html', patient=name, email=email, filename=filename, result=label, accuracy=int(accuracy), user=current_user)
         else:
             flash('Allowed image types are -> png, jpg, jpeg', category='error')
             return redirect(request.url)
