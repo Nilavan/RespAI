@@ -78,6 +78,7 @@
               prediction;
             document.getElementById("name").placeholder = "";
             document.getElementById("email").placeholder = "";
+            <!-- "7472883f-b08d-404a-ae4e-1ff6f8a5f50f" -->
             Email.send({
               SecureToken: "3adb7480-22b9-4738-8df1-508d5c5da9d7",
               To: email,
@@ -86,7 +87,8 @@
               Body:
                 "Dear " +
                 name +
-                ",<br><br>Your COVID19/Pneumonia test results have been verified to be FAT AF " +
+                ",<br><br>Your COVID19/Pneumonia test results have been verified to be " +
+                prediction +
                 " with a probability of " +
                 probability +
                 "<br><br>Regards,<br>Team RespAI",
